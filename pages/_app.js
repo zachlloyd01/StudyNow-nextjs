@@ -10,6 +10,10 @@ import Head from 'next/head'
 
 export default function MyApp({ Component, pageProps }) {
 
+  // TODO: CHECK IF USER DATA IN SESSION -> CHECK TOKEN EXPIRY -> REFRESH IF NEEDED
+  // TODO: HIGH FUNCTION TO SAVE DATA TO STORAGE WHEN NECESSARY
+  //TODO: IF NO USER DATA, BUT REFRESH TOKEN -> REFRESH USER TOKEN, GET NEW DATA
+
   return (
 
 

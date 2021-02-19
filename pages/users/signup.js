@@ -33,11 +33,11 @@ export default function signup() {
             password: event.target.password.value
         };
 
-        let res = await axios.post('/api/users/signup', data);
+        let res = await axios.post('/api/users/signup', data); // Server response
 
-        await localStorage.setItem("refreshToken", JSON.stringify(res.data.refreshToken));
+        await localStorage.setItem("refreshToken", JSON.stringify(res.data.refreshToken)); // Set local Storage (persists)
 
-        await sessionStorage.setItem("userData", JSON.stringify(res.data.sendData));
+        await sessionStorage.setItem("userData", JSON.stringify(res.data.sendData)); // Set session storage (does not persist)
 
         console.log(sessionStorage)
         
