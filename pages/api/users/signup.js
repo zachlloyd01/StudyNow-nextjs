@@ -6,6 +6,8 @@ import dbConnect from '../../../utils/dbConnect';
 import User from '../../../models/User';
 
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import Cookie from 'cookies';
 
 dbConnect();
 
@@ -19,14 +21,51 @@ export default async (req, res) => {
 
         data.password = hashedPassword; // Set password to salted and ecrypted version
 
-        const newUser = await User.create(data); // Create and push model instance
+        let refreshString = Math.random().toString(36) // Random string
+                            .substring(2, 15) + Math.random()
+                            .toString(36).substring(2, 15);
 
-        res.status(200).json({ // Send data back to frontend
-            success: 'success',
-            user: {
-                name: newUser.name,
-                email: newUser.email,
+        data.refreshToken = refreshString;
+
+        let newUser;
+
+        try {
+            newUser = await User.create(data); // Create and push model instance
+        }
+        catch (err) {
+            return res.status(500).json(err);
+        }
+
+        const sendData = {
+            id: newUser.id,
+            email: newUser.email,
+            name: newUser.name
+        };
+
+        const userToken = jwt.sign( // User token expires quickly
+            sendData,
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '10 minutes'
             }
+        );
+
+        const refreshToken = await jwt.sign( // Expires after one week
+            {refreshString,},
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '1 week'
+            }
+        );
+
+        await Cookie.set('userToken', userToken, {
+            httpOnly: true,
+        });
+
+        
+        res.status(200).json({ // Send data back to frontend
+            refreshToken,
+            sendData
         });
     }
 

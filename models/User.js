@@ -5,8 +5,6 @@ import mongoose from 'mongoose';
     a new user in the DB
 */
 
-
-
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -20,6 +18,10 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Please provide a password!'],
+    },
+    refreshToken: { // Will be refreshed after every login, user update, etc., or after 1+ week of inactivity
+        type: String,
+        required: [true, 'Please provide a refresh token']
     }
 });
 

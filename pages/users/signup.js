@@ -34,6 +34,12 @@ export default function signup() {
         };
 
         let res = await axios.post('/api/users/signup', data);
+
+        await localStorage.setItem("refreshToken", JSON.stringify(res.data.refreshToken));
+
+        await sessionStorage.setItem("userData", JSON.stringify(res.data.sendData));
+
+        console.log(sessionStorage)
         
     }
 
